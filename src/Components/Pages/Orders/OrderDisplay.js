@@ -1,7 +1,7 @@
 import React from 'react';
 
-const OrderDisplay = ({order, cancelOrder}) => {
-    const {_id, img, title,price} = order;
+const OrderDisplay = ({order, cancelOrder, handleStatusUpdate}) => {
+    const {_id, img, title,price, status} = order;
     return (
         <div>
             <div className="overflow-x-auto w-full">
@@ -22,7 +22,8 @@ const OrderDisplay = ({order, cancelOrder}) => {
                             </td>
                             <td className='font-bold'>Total: ${price}</td>
                             <th>
-                                <button onClick={()=> cancelOrder(_id)} className="py-2 px-2 rounded-md bg-car text-white">Cancel</button>
+                                <button onClick={()=> cancelOrder(_id)} className="p-3 rounded-full bg-car text-white">X</button>
+                                <button onClick={()=> handleStatusUpdate(_id)} className={`py-2 px-2 rounded-md text-white ml-2 ${status? 'bg-green-600': 'bg-car'}`}>{status ? status : 'Pending'}</button>
                             </th>
                         </tr>
                     </tbody>

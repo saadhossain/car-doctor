@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import OrderDisplay from './OrderDisplay';
 
 const Orders = () => {
@@ -28,12 +28,38 @@ const Orders = () => {
             })
         }
     }
+    //Handle Update Status
+    const handleStatusUpdate = (id) => {
+        fetch(`http://localhost:5000/orders/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({status: 'Approved'})
+        })
+        .then(res=> res.json())
+        .then(data => {
+            if(data.modifiedCount > 0){
+                toast.success('Your Order is Approved')
+                const remaining = orders.filter( order => order._id !== id);
+                const approved = orders.find(order => order._id === id);
+                approved.status = 'Approved';
+                const updatedOrders = [approved, ...remaining]
+                setOrders(updatedOrders)
+            }
+        })
+    }
     return (
         <div className='w-11/12 lg:w-2/4 mx-auto py-10'>
             <h1 className='text-2xl font-bold text-car'>Order Summery</h1>
             <div>
                 {
-                    orders.map(order => <OrderDisplay key={order._id} order={order} cancelOrder={cancelOrder}></OrderDisplay>)
+                    orders.map(order => <OrderDisplay 
+                        key={order._id} 
+                        order={order} 
+                        cancelOrder={cancelOrder}
+                        handleStatusUpdate={handleStatusUpdate}
+                    ></OrderDisplay>)
                 }
             </div>
             <div className='my-5 p-5 bg-slate-300 rounded-md w-2/4 ml-auto text-right'>
@@ -43,6 +69,7 @@ const Orders = () => {
                 <hr className='border border-black'/>
                 <h2 className='text-2xl font-bold'>Sub Total : ${totalPrice}</h2>
             </div>
+            <Toaster></Toaster>
         </div>
     );
 };
