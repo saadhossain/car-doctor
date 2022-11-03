@@ -8,7 +8,7 @@ import slider6 from '../../../assets/images/banner/6.jpg';
 import './SliderOverlay.css'
 const HomeSlider = () => {
     return (
-        <div className='w-9/12 mx-auto my-5 rounded'>
+        <div className='my-5 rounded'>
             <div className="carousel w-full rounded-lg">
                 {/* Slider 1 */}
                 <div id="slide1" className="carousel-item relative w-full">
