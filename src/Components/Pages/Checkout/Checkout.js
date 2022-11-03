@@ -3,36 +3,50 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useLoaderData } from 'react-router-dom';
 
 const Checkout = () => {
-    const service = useLoaderData()
-    const { title, price, service_id, img } = service;
-    const [orderDetails, setOrderDetails] = useState({})
+    const { title, price, _id, img } = useLoaderData()
+    const [customerInfo, setCustomerInfo] = useState({})
 
     const handlePlaceOrder = () => {
-        const product = {service_id, img, title, price};
-        const orderInfo = {product, orderDetails};
-        console.log(orderInfo);
-        fetch('http://localhost:5000/orders', {
-            method: 'POST',
-            headers:{
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(orderInfo)
-        })
-        .then(res => res.json())
-        .then(data => {
-            if(data.acknowledged){
-                toast.success('Order Placed Successfully...')
-            }
-        })
+        const orderInfo = {
+            service_id: _id,
+            img,
+            title,
+            price,
+            customerName: `${customerInfo.firstname} ${customerInfo.lastname}`,
+            email: customerInfo.email,
+            phone: customerInfo.phone,
+            city: customerInfo.city
+
+        };
+        if (customerInfo.email) {
+            fetch('http://localhost:5000/orders', {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify(orderInfo)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.acknowledged) {
+                        toast.success('Order Placed Successfully...')
+                    }
+                })
+        }
+        else{
+            toast.error('Please Input Billing Information...')
+            return
+        }
+
 
     }
     const handleInputValue = (e) => {
         e.preventDefault();
         const field = e.target.name;
         const value = e.target.value;
-        const billingInfo = {...orderDetails}
-        billingInfo[field] = value;
-        setOrderDetails(billingInfo)
+        const customer = { ...customerInfo }
+        customer[field] = value;
+        setCustomerInfo(customer)
     }
     return (
         <div className='w-10/12 mx-auto py-5'>
@@ -110,11 +124,11 @@ const Checkout = () => {
                     <h2 className='text-2xl font-font text-car mb-2'>Payment Method</h2>
                     <div className="form-control">
                         <label className="label cursor-pointer justify-start gap-5">
-                            <input type="checkbox" className="checkbox" disabled/>
+                            <input type="checkbox" className="checkbox" disabled />
                             <span className="label-text text-xl">Credit Card</span>
                         </label>
                         <label className="label cursor-pointer justify-start gap-5">
-                            <input type="checkbox" className="checkbox"/>
+                            <input type="checkbox" className="checkbox" />
                             <span className="label-text text-xl">Cash on Delivery</span>
                         </label>
                     </div>
