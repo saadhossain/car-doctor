@@ -17,10 +17,10 @@ const Registration = () => {
             .then((result) => {
                 const user = result.user;
                 const currentUser = {
-                    email : user.email
+                    email: user.email
                 }
                 toast.success('Login successful...');
-                fetch('http://localhost:5000/getaccesstoken', {
+                fetch('https://car-doctor-server-hazel.vercel.app/getaccesstoken', {
                     method: 'POST',
                     headers: {
                         'content-type': 'application/json'

@@ -9,15 +9,15 @@ import PrivateRoutes from "./PrivateRoutes";
 
 export const routers = createBrowserRouter([
     {
-        path: '/', 
-        element: <Main></Main>, 
+        path: '/',
+        element: <Main></Main>,
         children: [
-            {path: '/', element:<Home/>},
-            {path: '/home', element: <Home></Home>},
-            {path: '/login', element: <Login></Login>},
-            {path: '/registration', element: <Registration></Registration>},
-            {path: '/checkout/:id', loader : ({params}) => fetch(`http://localhost:5000/services/${params.id}`), element:<PrivateRoutes><Checkout></Checkout></PrivateRoutes>},
-            {path: '/orders', element: <PrivateRoutes><Orders></Orders></PrivateRoutes>}
+            { path: '/', element: <Home /> },
+            { path: '/home', element: <Home></Home> },
+            { path: '/login', element: <Login></Login> },
+            { path: '/registration', element: <Registration></Registration> },
+            { path: '/checkout/:id', loader: ({ params }) => fetch(`https://car-doctor-server-hazel.vercel.app/services/${params.id}`), element: <PrivateRoutes><Checkout></Checkout></PrivateRoutes> },
+            { path: '/orders', element: <PrivateRoutes><Orders></Orders></PrivateRoutes> }
         ]
     }
 ])

@@ -5,10 +5,10 @@ import HomeSlider from './HomeSlider';
 
 const Home = () => {
     const [services, setServices] = useState([]);
-    useEffect(()=> {
-        fetch('http://localhost:5000/services')
-        .then(res => res.json())
-        .then(data => setServices(data))
+    useEffect(() => {
+        fetch('https://car-doctor-server-hazel.vercel.app/services')
+            .then(res => res.json())
+            .then(data => setServices(data))
     }, [])
     return (
         <div className='w-10/12 mx-auto'>
