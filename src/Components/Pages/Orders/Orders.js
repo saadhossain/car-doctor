@@ -6,7 +6,11 @@ const Orders = () => {
     const [orders, setOrders] = useState([])
     const totalPrice = orders.reduce((prev, current)=> prev + parseFloat(current.price), 0)
     useEffect(() => {
-        fetch('http://localhost:5000/orders?email=tonuhossain92@gmail.com')
+        fetch('http://localhost:5000/orders?email=tonuhossain92@gmail.com',{
+            headers: {
+                authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
             .then(res => res.json())
             .then(data => setOrders(data))
     }, [])
