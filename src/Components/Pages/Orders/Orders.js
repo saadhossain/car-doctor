@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from 'react';
+import { useContext } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
+import { AuthContext } from '../../../Context/AuthProvider';
 import OrderDisplay from './OrderDisplay';
 
 const Orders = () => {
+    const {user, logOut} = useContext(AuthContext);
     const [orders, setOrders] = useState([])
     const totalPrice = orders.reduce((prev, current)=> prev + parseFloat(current.price), 0)
     useEffect(() => {
-        fetch('http://localhost:5000/orders?email=tonuhossain92@gmail.com',{
+        fetch(`http://localhost:5000/orders?email=${user.email}`,{
             headers: {
-                authorization: `Bearer ${localStorage.getItem('token')}`
+                'authorization' : `Bearer ${localStorage.getItem('Access_Token')}`
             }
         })
-            .then(res => res.json())
+            .then(res => {
+                if(res.status === 401 || res.status === 403){
+                    return logOut()
+                }
+                return res.json()
+            })
             .then(data => setOrders(data))
-    }, [])
+    }, [user?.email, logOut])
 
     //Handle Cancel Order
     const cancelOrder = (id) => {

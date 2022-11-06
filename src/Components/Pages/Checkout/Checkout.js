@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData, useLocation, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../../Context/AuthProvider';
 
 const Checkout = () => {
     const { title, price, _id, img } = useLoaderData()
     const [customerInfo, setCustomerInfo] = useState({})
-
+    const { user } = useContext(AuthContext);
+    const navigate = useNavigate()
+    const location = useLocation()
+    const from = location.state?.from?.pathname || '/orders'
     const handlePlaceOrder = () => {
         const orderInfo = {
             service_id: _id,
@@ -13,12 +17,12 @@ const Checkout = () => {
             title,
             price,
             customerName: `${customerInfo.firstname} ${customerInfo.lastname}`,
-            email: customerInfo.email,
+            email: user.email,
             phone: customerInfo.phone,
             city: customerInfo.city
 
         };
-        if (customerInfo.email) {
+        if (customerInfo.phone) {
             fetch('http://localhost:5000/orders', {
                 method: 'POST',
                 headers: {
@@ -30,10 +34,11 @@ const Checkout = () => {
                 .then(data => {
                     if (data.acknowledged) {
                         toast.success('Order Placed Successfully...')
+                        navigate(from, { replace: true })
                     }
                 })
         }
-        else{
+        else {
             toast.error('Please Input Billing Information...')
             return
         }
@@ -73,7 +78,7 @@ const Checkout = () => {
                                 </span>
                                 <span>
                                     <label htmlFor='email' className='block text-md font-semibold'>Email Address</label>
-                                    <input onBlur={handleInputValue} type="text" name='email' className="input input-bordered w-full" />
+                                    <input defaultValue={user.email} type="text" name='email' className="input input-bordered w-full" placeholder={user.email} disabled />
                                 </span>
                             </div>
                             <div className='flex gap-2 mb-2'>
